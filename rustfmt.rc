@@ -1,0 +1,7 @@
+#[link(name = "rustfmt",
+       vers = "0.3",
+       uuid = "553eca59-32d8-4dbd-852a-ea6b543a43f2",
+       url = "https://github.com/dbp/rustfmt")];
+
+#[comment = "Rust code formatter"];
+#[license = "MIT"];
