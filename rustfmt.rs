@@ -1,18 +1,18 @@
 
-use std(vers = "0.3");
-use syntax(vers = "0.3");
+extern mod std; //(vers = "0.4");
+extern mod syntax; //(vers = "0.4");
 
-import core::*;
+use core::*;
 
-import result::{ok, err};
-import option::{none, some};
-import std::getopts;
-import getopts::{opt_present, optflag};
+use result::{Ok, Err};
+use option::{None, Some};
+use std::getopts;
+use getopts::{opt_present, optflag};
 
-import syntax::{parse, codemap};
-import syntax::parse::{new_parse_sess, parse_sess};
-import syntax::diagnostic::{mk_handler, mk_span_handler};
-import syntax::print::pprust;
+use syntax::{parse, codemap};
+use syntax::parse::{new_parse_sess, parse_sess};
+use syntax::diagnostic::{mk_handler, mk_span_handler};
+use syntax::print::pprust;
 
 // copied from rustc/driver/driver.rs
 fn anon_src() -> ~str { ~"<anon>" }
@@ -35,14 +35,14 @@ fn usage() {
                 ~"       rustfmt [-h|--help] (this message)");
 }
 
-fn main(args: ~[~str]) {
+fn main(++args: ~[~str]) {
     let mut args = copy args;
     vec::shift(args); // get rid of binary
 
     let matches =
         match getopts::getopts(args, ~[optflag(~"h"), optflag(~"help")]) {
-          ok(m) => copy m,
-          err(f) => {
+          Ok(m) => copy m,
+          Err(f) => {
             fail getopts::fail_str(f);
           }
         };
@@ -69,12 +69,12 @@ fn main(args: ~[~str]) {
 
     // run pretty printer
     let codemap = codemap::new_codemap();
-    let span_diagnostic = mk_span_handler(mk_handler(none), codemap);
+    let span_diagnostic = mk_span_handler(mk_handler(None), codemap);
     let parse_sess = parse::new_parse_sess_special_handler(span_diagnostic,
                                                            codemap);
     let crate = match input {
       file_input(file) => {
-        parse::parse_crate_from_file(file, ~[], parse_sess)
+        parse::parse_crate_from_file(&(path::from_str(file)), ~[], parse_sess)
       }
       str_input(src) => {
         // FIXME (#2319 on rust tracker): Don't really want to box the source string
